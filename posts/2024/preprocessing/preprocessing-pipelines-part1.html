@@ -67,6 +67,26 @@
                     <p>The reason is this:<br>
                     </p>
                     <h2>Enter the Pipeline: A Streamlined Approach</h2>
+
+<pre>
+<code class="language-python">"""Script for preprocessing customer data"""
+
+import pandas as pd
+from sklearn.pipeline import Pipeline
+
+from preprocessing import AgeImputer, NameCleaner
+
+customer_data = pd.read_excel("data/data.xlsx")
+
+pipeline = Pipeline(
+    [
+        ("age_imputer", AgeImputer(age_col="age", max_age=100)),
+        ("name_cleaner", NameCleaner(name_col="name")),
+    ]
+)
+
+clean_customer_data = pipeline.fit_transform(customer_data)</code>
+</pre>
                 </div>
             </div>
         </div>
