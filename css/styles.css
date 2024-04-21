@@ -76,7 +76,7 @@
   --bs-border-radius-pill: 50rem;
   --bs-link-color: #212529;
   --bs-link-hover-color: #a10066;
-  --bs-code-color: #d63384;
+  --bs-code-color: #000000;
   --bs-highlight-bg: #fff3cd;
 }
 
@@ -292,7 +292,6 @@ a:not([href]):not([class]):hover {
   text-decoration: none;
 }
 
-
 code,
 kbd,
 samp {
@@ -312,6 +311,17 @@ pre code {
   font-size: inherit;
   color: inherit;
   word-break: normal;
+}
+
+
+.code {
+  font-family: monospace;
+  padding: 0 5px 2px;
+  font-size: .8em;
+  line-height: 1em;
+  font-weight: 400 !important;
+  background: #e5eff5 !important;
+  border-radius: 3px;
 }
 
 code {
