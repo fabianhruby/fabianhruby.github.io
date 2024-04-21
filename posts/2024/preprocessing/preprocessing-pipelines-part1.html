@@ -33,13 +33,15 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
                     <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/about.html">About</a></li>a></li>
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/about.html">About</a></li>a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
     <!-- Page Header-->
-    <header class="masthead" style="background-image: url('/assets/img/preprocessing-with-scikit-learn-pipelines-part1.jpg')">
+    <header class="masthead"
+        style="background-image: url('/assets/img/preprocessing-with-scikit-learn-pipelines-part1.jpg')">
         <div class="container position-relative px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-6 col-lg-7 col-xl-9">
@@ -60,32 +62,70 @@
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <h2>Introduction</h2>
-                    <p>It is very likely that you have stumbled upon the saying “Garbage in, Garbage out” when you read articles or books about machine learning. That's way data preprocessing is a fundamental step in the machine learning lifecycle, significantly impacting model performance, efficiency, and even fairness.</p>
-                    <p>In this three-part series, we'll delve into the world of data preprocessing using scikit-learn pipelines. Part 1 will explore the 'why' and 'how' of preprocessing, focusing on standard transformers and their limitations. Part 2 will explore more advanced techniques for handling categorical data and building custom transformers, while part 3 will introduce scikit-learn's ColumnTransformer, which is suitable for applying transformations to heterogeneous datasets (datasets with different data types).</p>
+                    <p>It is very likely that you have stumbled upon the saying “Garbage in, Garbage out” when you read
+                        articles or books about machine learning. That's way data preprocessing is a fundamental step in
+                        the machine learning lifecycle, significantly impacting model performance, efficiency, and even
+                        fairness.</p>
+                    <p>In this three-part series, we'll delve into the world of data preprocessing using scikit-learn
+                        pipelines. Part 1 will explore the 'why' and 'how' of preprocessing, focusing on standard
+                        transformers and their limitations. Part 2 will explore more advanced techniques for handling
+                        categorical data and building custom transformers, while part 3 will introduce scikit-learn's
+                        ColumnTransformer, which is suitable for applying transformations to heterogeneous datasets
+                        (datasets with different data types).</p>
                     <h2>Why do we even want to preprocess our data?</h2>
-                    <p>Clean and properly scaled data is critical to successfully for training machine learning models. While not every machine learning model needs data that lives in the same scale, it's not a disadvantage for these models if they do so.</p>
-                    <p>The reason is this:<br>
+                    <p>Clean and properly scaled data is critical to successfully training machine learning models - and
+                        here is why:</p>
+                    <p>
+                    <ul>
+                        <li>
+                            <h3>Missing or Falsy Values</h3>
+                            Data collection isn't always perfect, and you might encounter missing or falsy entries.
+                            These missing and falsy values can confuse your model and lead to inaccurate predictions.
+                            Preprocessing techniques like imputation
+                            (filling in missing values) or deletion ensure your data is complete and ready for analysis.
+                        </li>
+                        </p>
+                        <p>
+                            <li>
+                                <h3>Different Scales</h3>
+                                Imagine one feature in your data measures income in dollars (ranging from 0 to millions)
+                                and
+                                another measures age in years (0 to 100). If you feed this directly into a model, the
+                                income
+                                feature will overwhelm the age feature due to its larger scale. This can lead to the
+                                model
+                                prioritizing income over age, even if age might be a more important factor for your
+                                prediction. Preprocessing techniques like scaling or normalization address this by
+                                putting all features on a similar scale.
+                            </li>
+                        </p>
+                    </ul>
+                    By handling missing values and ensuring consistent scales, preprocessing helps your machine
+                    learning
+                    model focus on the actual relationships within your data. This leads to cleaner, more accurate,and
+                    interpretable results.
+
+                    <p>In addition to these, there are other reasons to preprocess data, such as:
+                    <ul>
+                        <li>
+                            <h3>Encoding Categorical Features</h3>
+                            Many models can't understand text labels directly. Preprocessing techniques like one-hot
+                            encoding transform categorical features (like "red", "blue", "green") into numerical
+                            representations the model can work with.
+                        </li>
+                        </p>
+                        <p>
+                            <li>
+                                <h3>Handling Outliers</h3>
+                                Extreme outliers can skew your model's predictions. Preprocessing techniques such as
+                                capping address these outliers without discarding valuable data points.
+                            </li>
+                    </ul>
                     </p>
                     <h2>Enter the Pipeline: A Streamlined Approach</h2>
 
-<pre>
-<code class="language-python">"""Script for preprocessing customer data"""
-
-import pandas as pd
-from sklearn.pipeline import Pipeline
-
-from preprocessing import AgeImputer, NameCleaner
-
-customer_data = pd.read_excel("data/data.xlsx")
-
-pipeline = Pipeline(
-    [
-        ("age_imputer", AgeImputer(age_col="age", max_age=100)),
-        ("name_cleaner", NameCleaner(name_col="name")),
-    ]
-)
-
-clean_customer_data = pipeline.fit_transform(customer_data)</code>
+                    <pre>
+<code class="language-python"></code>
 </pre>
                 </div>
             </div>
