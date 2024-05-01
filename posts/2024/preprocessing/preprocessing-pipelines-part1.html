@@ -144,11 +144,9 @@
                                 href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html">Sklearn
                                 Pipeline</a></cite>
                     </blockquote>
-
                     In order to understand how a pipeline works and how you can utilize it, we will use a very basic
                     script. I will explain the different parts step by step to give you a good understanding
-                    about
-                    what the different parts do.
+                    about what's going on.
                     <br><br>
                     But first, let's have a quick look at the data we will be working with in this preprocessing series:
                     <br><br>
@@ -159,6 +157,10 @@
                     <p>
                         In this post, we will focus on the errorous data in the yellow rectangles. The data points
                         highlighted with red are the ones we will be looking at part two.
+                        <br><br>
+                        As you can see, we are only focusing on numerical columns. The issue with these data points is
+                        obvious: we have missing data, but we will find a way to fix this – with a simple preprocessing
+                        pipeline from scikit-learn's <incode>Pipeline</incode> class.
                     </p>
                     <pre>
 <code class="language-python">"""Script for preprocessing data"""
@@ -174,7 +176,7 @@ DATA_PATH = "data/data.xlsx"
 # Reading in data and converting the postal_code column as an integer
 raw_data = pd.read_excel(DATA_PATH, converters={"postal_code": int})
 
-# Selecting the columns in which missing values which should be imputed
+# Selecting the columns in which missing values should be imputed
 cols_to_impute = ["age", "experience_in_years", "salary_in_dollar"]
 
 # Creating our Pipeline object with a SimpleImputer and MinMaxScaler from sklearn
