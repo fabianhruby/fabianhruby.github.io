@@ -41,10 +41,10 @@
     </nav>
     <!-- Page Header-->
     <header class="masthead"
-        style="background-image: url('/assets/img/preprocessing-with-scikit-learn-pipelines-part1.jpg')">
+        style="background-image: url('/assets/img/posts/2024/preprocessing-with-scikit-learn-pipelines-part1.jpg')">
         <div class="container position-relative px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-6 col-lg-7 col-xl-9">
+                <div class="col-md-6 col-lg-8 col-xl-8">
                     <div class="post-heading">
                         <h1>Preprocessing with scikit-learn Pipelines (1/3)</h1>
                         <h2 class="subheading">Motivation and Standard Transformers</h2>
@@ -59,8 +59,8 @@
     <!-- Post Content-->
     <article class="mb-4">
         <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+            <div class="row gx-4 gx-lg-6 justify-content-center">
+                <div class="col-md-10 col-lg-10 col-xl-8">
                     <h2>Introduction</h2>
                     <p>It is very likely that you have stumbled upon the saying “Garbage in, Garbage out” when you read
                         articles or books about machine learning. That's where data preprocessing comes into play. It's
@@ -68,11 +68,14 @@
                         performance and efficiency.</p>
                     <p>In this three-part series, we'll take a look at the world of data preprocessing using
                         scikit-learn
-                        pipelines. Part 1 will explore the 'why' and 'how' of preprocessing, focusing on standard
-                        transformers and their limitations. Part 2 will explore more advanced techniques for handling
-                        categorical data and building custom transformers, while part 3 will introduce scikit-learn's
+                        pipelines.
+                        <strong>Part 1</strong> will explore the "why" and "how" of preprocessing, focusing on standard
+                        transformers and their limitations.
+                        <strong>Part 2</strong> will explore more advanced techniques for handling categorical data and
+                        building custom transformers, while <strong>part 3</strong> will introduce scikit-learn's
                         ColumnTransformer, which is suitable for applying transformations to heterogeneous datasets
-                        (datasets with different data types).</p>
+                        (datasets with different data types).
+                    </p>
                     <h2>Why do we even want to preprocess our data?</h2>
                     <p>Clean and properly scaled data is critical to successfully training machine learning models - and
                         here is why:</p>
@@ -125,11 +128,68 @@
                     </ul>
                     </p>
                     <h2>Enter the Pipeline: A Streamlined Approach with scikit-learn</h2>
+                    <p>
+
+                        Sklearn describes a pipeline as followed:<br>
+                    <blockquote class="blockquote">
+                        A sequence of data transformers with an optional final predictor.
+                        <br><br>
+                        Pipeline allows you to sequentially apply a list of transformers to
+                        preprocess the
+                        data
+                        and,
+                        if desired, conclude the sequence with a final predictor for predictive modeling.
+                        <br><br>
+                        – <cite><a
+                                href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html">Sklearn
+                                Pipeline</a></cite>
+                    </blockquote>
+
+                    In order to understand how a pipeline works and how you can utilize it, we will use a very basic
+                    script. I will explain the different parts step by step to give you a good understanding
+                    about
+                    what the different parts do.
+                    <br><br>
+                    But first, let's have a quick look at the data we will be working with in this preprocessing series:
+                    <br><br>
+                    <img class="img-fluid"
+                        src="/assets/img/posts/2024/preprocessing-with-scikit-learn-pipelines-part1-data.png">
+                    <br>
+                    </p>
+                    <p>
+                        In this post, we will focus on the errorous data in the yellow rectangles. The data points
+                        highlighted with red are the ones we will be looking at part two.
+                    </p>
                     <pre>
-<code class="language-python">
+<code class="language-python">"""Script for preprocessing data"""
+
 import pandas as pd
+from sklearn.impute import SimpleImputer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import MinMaxScaler
+
+# Path to our raw data
+DATA_PATH = "data/data.xlsx"
+
+# Reading in data and converting the postal_code column as an integer
+raw_data = pd.read_excel(DATA_PATH, converters={"postal_code": int})
+
+# Selecting the columns in which missing values which should be imputed
+cols_to_impute = ["age", "experience_in_years", "salary_in_dollar"]
+
+# Creating our Pipeline object with a SimpleImputer and MinMaxScaler from sklearn
+pipeline = Pipeline([
+    ("MeanImputer", SimpleImputer(strategy="mean")),
+    ("MinMaxScaler", MinMaxScaler()),
+])
+
+# Coping our raw_data and imputing missing values with the column's mean
+imputed_data = raw_data.copy()
+imputed_data[cols_to_impute] = pipeline.fit_transform(raw_data[cols_to_impute])
 </code>
 </pre>
+
+
                 </div>
             </div>
         </div>
