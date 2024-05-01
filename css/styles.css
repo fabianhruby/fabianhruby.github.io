@@ -292,11 +292,20 @@ a:not([href]):not([class]):hover {
   text-decoration: none;
 }
 
+incode {
+  font-family: monospace;
+  font-size: 1.1rem;
+  padding: 1px;
+  background-color: #d9efff;
+  word-wrap: break-word;
+}
+
 code,
 kbd,
 samp {
   font-family: var(--bs-font-fira);
-  font-size: 1em;
+  padding: 1px;
+  word-wrap: break-word;
 }
 
 pre {
