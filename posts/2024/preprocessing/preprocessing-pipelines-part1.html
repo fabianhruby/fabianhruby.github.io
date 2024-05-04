@@ -18,6 +18,12 @@
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="/css/styles.css" rel="stylesheet" />
     <link href="/css/prism-atom-dark.css" rel="stylesheet" />
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+      </script>
+    <script type="text/javascript"
+        src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        </script>
 </head>
 
 <body>
@@ -33,7 +39,7 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
                     <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/about.html">About</a></li>a>
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/about.html">About</a></li>
                     </li>
                 </ul>
             </div>
@@ -49,7 +55,7 @@
                         <h1>Preprocessing with scikit-learn Pipelines (1/3)</h1>
                         <h2 class="subheading">Motivation and Standard Transformers</h2>
                         <span class="meta">
-                            Posted by Fabian Hruby on April 20, 2024
+                            Posted by Fabian Hruby on Mai 02, 2024
                         </span>
                     </div>
                 </div>
@@ -63,7 +69,9 @@
                 <div class="col-md-10 col-lg-10 col-xl-8">
                     <h2>Introduction</h2>
                     <p>You have probably come across the phrase "garbage in, garbage out" when reading articles or books
-                        on machine learning. That's where data preprocessing comes in. It's a fundamental step in the
+                        on machine learning. This phrase relates to the fact that data with a high quality is the key if
+                        you want to successfully develop a model which really adds value.That's where data preprocessing
+                        comes in. It's a fundamental step in the
                         machine learning lifecycle and has a significant impact on model performance and efficiency.</p>
                     <p>In this three-part series, we'll take a look at the world of data preprocessing using
                         scikit-learn
@@ -153,13 +161,17 @@
                         highlighted in red are the ones we will be looking at in part two.
                         <br><br>
                         As you can see, we are only focusing on the numerical columns. The problem with these data
-                        points is obvious: we have missing data, but we will find a way to fix this – with some simple
+                        points is obvious: we have missing data, but we will find a way to fix this – with a simple
                         preprocessing
                         pipeline from scikit-learn's <incode>Pipeline</incode> class.
+                        <br><br>
+                        Here is the code that we will discuss step by step to gain insight into a standard
+                        preprocessing pipeline:
                     </p>
                     <pre>
 <code class="language-python">"""Script for preprocessing data"""
 
+import numpy as np
 import pandas as pd
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
@@ -176,7 +188,7 @@ cols_to_impute = ["age", "experience_in_years", "salary_in_dollar"]
 
 # Creating our Pipeline object with a SimpleImputer and MinMaxScaler from sklearn
 pipeline = Pipeline([
-    ("MeanImputer", SimpleImputer(strategy="mean")),
+    ("MeanImputer", SimpleImputer(missing_values=np.nan, strategy="mean")),
     ("MinMaxScaler", MinMaxScaler()),
 ])
 
@@ -185,8 +197,155 @@ imputed_data = raw_data.copy()
 imputed_data[cols_to_impute] = pipeline.fit_transform(raw_data[cols_to_impute])
 </code>
 </pre>
+                    <br>
+                    Here's a step-by-step breakdown of the above (simple) pipeline for imputing missing values
+                    and scaling numeric features:
+                    <br><br>
+                    <h3 class="pad-code">1. Import Necessary Libraries</h3>
+                    <pre><code class="language-python">import numpy as np
+import pandas as pd
+from sklearn.impute import SimpleImputer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import MinMaxScaler
+</code></pre>
+                    <br>
+                    <h3 class="pad-code">2. Load and Prepare Data</h3>
+                    <pre><code class="language-python">DATA_PATH = "data/data.xlsx"
+raw_data = pd.read_excel(DATA_PATH, converters={"postal_code": int})
+</code></pre>
+                    <ul>
+                        <li>Replace <incode>data/data.xlsx</incode> with the path to your actual data file.
+                        </li>
+                        <li>The <incode>converters</incode> parameter in
+                            <incode>pd.read_excel</incode> ensures the
+                            <incode>postal_code</incode> column is read as integers.
+                        </li>
+                    </ul>
+                    <br>
+                    <h3 class="pad-code">3. Select Columns to Impute and Scale</h3>
+                    <pre><code class="language-python">cols_to_impute = ["age", "experience_in_years", "salary_in_dollar"]
+</code></pre>
+                    <br>
+                    <h3 class="pad-code">4. Simple Imputation for Missing Values</h3>
+                    <pre><code class="language-python">pipeline = Pipeline([
+("MeanImputer", SimpleImputer(missing_values=np.nan, strategy="mean")),
+("MinMaxScaler", MinMaxScaler()),
+])
+</code></pre>
+                    <p>Here it is: the construction of our <incode>Pipeline</incode> object named
+                        <incode>pipeline</incode>:
+                    </p>
+                    <img class="img-fluid"
+                        src="/assets/img/posts/2024/preprocessing-with-scikit-learn-pipelines-part1-pipeline.png"
+                        width="50%">
+                    <p><strong>Important Note</strong>: While selecting columns within the pipeline might seem
+                        convenient for this
+                        example,
+                        it's generally not recommended. This approach becomes inflexible when you have datasets with
+                        varying column types. In the third part of this series we'll explore scikit-learn's
+                        <incode>ColumnTransformer</incode>, a more
+                        versatile approach for handling heterogeneous datasets.
+                    </p>
+                    <p>As you can see, the <incode>pipeline</incode> object is created by passing a list to
+                        scikit-learn's <incode>Pipeline</incode>. The first element in the tuple is the name of the
+                        step, which you can choose freely. The second element is the transformation you want to apply to
+                        your data. Note that all these steps must be "transforms", which means, that they must implement
+                        a <incode>fit</incode> and a <incode>transform
+                        </incode> method. We will have a
+                        look at this when we will talk about custom transformers in the second part of this series.
+                    </p>
+                    <p>In our case, we are using two transformations:
+                    <ul>
+                        <li>
+                            <h4>
+                                SimpleImputer
+                            </h4>
+                            The simple imputer does what its name says: it imputes (missing) values based on a (simple)
+                            chosen strategy (<incode>"mean"</incode>, <incode>"median"</incode>,
+                            <incode>"most_frequent"</incode>, <incode>"constant"</incode>). In our case, the strategy is
+                            <incode>"mean"</incode>. This means that any missing values in the transformed column are be
+                            replaced by the mean of the corresponding column in which the missing value appears. I will
+                            not go into any further details and other imputers here as this would go beyond the scope of
+                            this article, but you can dig deeper in the <a
+                                href="https://scikit-learn.org/stable/modules/classes.html#module-sklearn.impute">scikit-learn
+                                documentation on imputing</a>.<br>
+                            <br>
+                            The <incode>missing_values</incode> parameter,allows you to specify the format of the
+                            missing values, if you want to. Although <incode>mean</incode> and <incode>np.nan</incode>
+                            are
+                            the default values for <incode>strategy</incode> and <incode>missing_values</incode>,
+                            I wanted to include them to show you that you can tweak the <incode>
+                                SimpleImputer</incode> to suit your needs.
 
+                        </li>
+                        <br>
+                        <li>
+                            <h4>MinMaxScaler</h4>
+                            Min-max scaling is a widely used scaling technique for scaling values in a
+                            fixed range between 0 and 1. The mathematical formula is as follows:
 
+                            $$ x_{scaled} = \frac{x - X_{min}}{X_{max} - X_{min}}$$
+
+                            <span style="font-style:italic">x_scaled</span>: The scaled value ranging between 0 and
+                            1<br>
+                            <span style="font-style:italic">x</span>: The value which will be scaled<br>
+                            <span style="font-style:italic">X_min</span>: The minimum value of all X values in the
+                            column<br>
+                            <span style="font-style:italic">X_max</span>: The maximum value of all X values in the
+                            column<br>
+                            <br>
+                            <incode>MinMaxScaler</incode> is only one of <a
+                                href="https://scikit-learn.org/stable/modules/classes.html#module-sklearn.preprocessing">
+                                many scaling techniques available in
+                                scikit-learn</a>. The choice of scaler depends on your specific data and the
+                            desired
+                            outcome.
+                        </li>
+                    </ul>
+                    </p>
+                    <h3 class="pad-code">5. Impute and Scale (on a copy)</h3>
+                    <pre><code class="language-python">imputed_data = raw_data.copy()
+imputed_data[cols_to_impute] = pipeline.fit_transform(raw_data[cols_to_impute])
+</code></pre>
+                    <p>
+                        We create a copy of the raw data named <incode>imputed_data</incode> to avoid modifying the
+                        original
+                        data. Then, we
+                        use the pipeline to transform the columns containing missing values <incode>cols_to_impute
+                        </incode>.</p>
+                    <p>Et voila: your missing values are imputed<br><br>
+                        <img class="img-fluid"
+                            src="/assets/img/posts/2024/preprocessing-with-scikit-learn-pipelines-part1-data-imputed.png">
+                        <span class="annotation">This screenshot has been added for
+                            demonstration purposes.
+                            Normally, you wouldn't see this intermediate step.</span><br><br>
+                        ... and then scaled
+                        <br><br>
+                        <img class="img-fluid"
+                            src="/assets/img/posts/2024/preprocessing-with-scikit-learn-pipelines-part1-data-scaled.png">
+                    </p>
+                    <p>
+                        As you can see, your transformations have worked!
+                        <li>We have no missing values</li>
+                        <li>Our columns are scaled so that the smallest unscaled value is 0 and the largest unscaled
+                            value is now 1. All other values are between 0 and 1.</li>
+                    </p>
+                    <p>
+                    <h4>Details about fit, transform and fit_transform</h4>
+                    Even if I have said that I won't go into any details regarding <incode>fit</incode> and <incode>
+                        transform</incode> in this post, I would still like to add a brief note.<br>
+                    To finally apply our pipeline to our data, we used the <incode>fit_transform</incode> method.
+                    Therefore, I would like to explain very briefly what the <incode>fit_transform</incode> method
+                    is all about. <incode>fit_transform</incode> is a method that combines the two methods <incode>
+                        fit</incode> and <incode>transform</incode> and is simply for convenience. Internally, the
+                    <incode>fit</incode> method is executed first, which learns the properties of the data that are
+                    then used in the <incode>transform</incode> method. In our case, this was the "learning" of the
+                    minimum and maximum values of our columns, as these are needed for our <incode>MinMaxScaler
+                    </incode> (see formula
+                    above). In other transformations (such as e.g. <incode>StandardScaler</incode> does), other
+                    properties
+                    such as the mean and standard deviation are
+                    learnt.
                 </div>
             </div>
         </div>
@@ -198,7 +357,7 @@ imputed_data[cols_to_impute] = pipeline.fit_transform(raw_data[cols_to_impute])
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <ul class="list-inline text-center">
                         <li class="list-inline-item">
-                            <a href="https://www.linkedin.com/in/fabian-hruby-36b932100/">
+                            <a class="logo" href="https://www.linkedin.com/in/fabian-hruby-36b932100/">
                                 <span class="fa-stack fa-lg">
                                     <i class="fas fa-circle fa-stack-2x"></i>
                                     <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
@@ -206,7 +365,7 @@ imputed_data[cols_to_impute] = pipeline.fit_transform(raw_data[cols_to_impute])
                             </a>
                         </li>
                         <li class="list-inline-item">
-                            <a href="https://github.com/fabianhruby">
+                            <a class="logo" href="https://github.com/fabianhruby">
                                 <span class="fa-stack fa-lg">
                                     <i class="fas fa-circle fa-stack-2x"></i>
                                     <i class="fab fa-github fa-stack-1x fa-inverse"></i>
