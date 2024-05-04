@@ -74,13 +74,14 @@
   --bs-border-radius-xl: 1rem;
   --bs-border-radius-2xl: 2rem;
   --bs-border-radius-pill: 50rem;
-  --bs-link-color: #212529;
+  --bs-link-color: #1a71c8;
   --bs-link-hover-color: #a10066;
   --bs-code-color: #000000;
   --bs-highlight-bg: #fff3cd;
 }
 
 *,
+
 *::before,
 *::after {
   box-sizing: border-box;
@@ -294,10 +295,19 @@ a:not([href]):not([class]):hover {
 
 incode {
   font-family: monospace;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  font-style: italic;
   padding: 1px;
-  background-color: #d9efff;
+  background-color: #e0e0e0;
   word-wrap: break-word;
+}
+.pad-code {
+  padding-bottom: 12px;
+}
+
+.annotation {
+  font-style: italic;
+  font-size: 0.8rem;
 }
 
 code,
@@ -331,6 +341,10 @@ pre code {
   font-weight: 400 !important;
   background: #e5eff5 !important;
   border-radius: 3px;
+}
+
+.logo {
+  --bs-link-color: #000000;
 }
 
 code {
