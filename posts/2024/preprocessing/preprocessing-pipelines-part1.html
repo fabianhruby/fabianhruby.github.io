@@ -82,9 +82,9 @@
                     <h2>Introduction</h2>
                     <p>You have probably come across the phrase "garbage in, garbage out" when reading articles or books
                         on machine learning. This phrase relates to the fact that data with a high quality is the key if
-                        you want to successfully develop a model which really adds value.That's where data preprocessing
-                        comes in. It's a fundamental step in the
-                        machine learning lifecycle and has a significant impact on model performance and efficiency.</p>
+                        you want to successfully develop a model which really adds value. That's where data
+                        preprocessing comes in, as it's a fundamental step in the machine learning lifecycle with a
+                        significant impact on model performance and efficiency.</p>
                     <p>In this three-part series, we'll take a look at the world of data preprocessing using
                         scikit-learn
                         pipelines.
@@ -111,8 +111,8 @@
                         <p>
                             <li>
                                 <h3>Different Scales</h3>
-                                Imagine that one feature in your data measures income in dollars (from 0 to millions)
-                                and another measures age in years (0 to 100). If you feed this directly into a model,
+                                Imagine that one feature in your data represents income in dollars (from 0 to millions),
+                                and another represents age in years (0 to 100).. If you feed this directly into a model,
                                 the income feature will overwhelm the age feature due to its larger scale. This can
                                 cause the model to prioritise income over age, even though age may be a more important
                                 factor for your prediction. Preprocessing techniques such as scaling or normalization
@@ -144,7 +144,7 @@
                     <h2>Enter the Pipeline: A Streamlined Approach with scikit-learn</h2>
                     <p>
 
-                        Sklearn describes a pipeline as followed:<br>
+                        Scikit-learn describes a pipeline as follows:<br>
                     <blockquote class="blockquote">
                         A sequence of data transformers with an optional final predictor.
                         <br><br>
@@ -253,7 +253,7 @@ raw_data = pd.read_excel(DATA_PATH, converters={"postal_code": int})
                     <p><strong>Important Note</strong>: While selecting columns within the pipeline might seem
                         convenient for this
                         example,
-                        it's generally not recommended. This approach becomes inflexible when you have datasets with
+                        it is generally not recommended. This approach becomes inflexible when you have datasets with
                         varying column types. In the third part of this series we'll explore scikit-learn's
                         <incode>ColumnTransformer</incode>, a more
                         versatile approach for handling heterogeneous datasets.
@@ -275,7 +275,8 @@ raw_data = pd.read_excel(DATA_PATH, converters={"postal_code": int})
                             The simple imputer does what its name says: it imputes (missing) values based on a (simple)
                             chosen strategy (<incode>"mean"</incode>, <incode>"median"</incode>,
                             <incode>"most_frequent"</incode>, <incode>"constant"</incode>). In our case, the strategy is
-                            <incode>"mean"</incode>. This means that any missing values in the transformed column are be
+                            <incode>"mean"</incode>. This means that any missing values in the transformed column will
+                            be
                             replaced by the mean of the corresponding column in which the missing value appears. I will
                             not go into any further details and other imputers here as this would go beyond the scope of
                             this article, but you can dig deeper in the <a
