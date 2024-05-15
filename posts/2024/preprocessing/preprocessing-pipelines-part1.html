@@ -33,9 +33,15 @@
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
       </script>
+    <!--
     <script type="text/javascript"
         src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
         </script>
+    -->
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+
 </head>
 
 <body>
@@ -297,7 +303,7 @@ raw_data = pd.read_excel(DATA_PATH, converters={"postal_code": int})
                             Min-max scaling is a widely used scaling technique for scaling values in a
                             fixed range between 0 and 1. The mathematical formula is as follows:
 
-                            $$x_{scaled} = \frac{x - X_{min}}{X_{max} - X_{min}}$$
+                            $x_{scaled} = \frac{x - X_{min}}{X_{max} - X_{min}}$
 
                             <span style="font-style:italic">x_scaled</span>: The scaled value ranging between 0 and
                             1<br>
