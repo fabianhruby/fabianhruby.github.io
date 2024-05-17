@@ -96,6 +96,15 @@
                     </p>
                     <h2>Setting the goal of your next transformations</h2>
                     <p>Speaking of data, let's take a look at our data after applying the transformations from part 1:
+                        <br><br>
+                        <img class="img-fluid"
+                            src="/assets/img/posts/2024/preprocessing/preprocessing-with-scikit-learn-pipelines-part2-data.png">
+                        <br><br>
+                        Our columns <incode>age</incode>, <incode>experience_in_years</incode> and <incode>
+                            salary_in_dollar</incode> look well prepared after we imputed missing values and scaled them
+                        with scikit-learns <incode>MinMaxScaler</incode>.
+                        <br>But what about values highlighted in yellow? Imagine you want to feed them as features into
+                        a neural network which can only handle numerical values?
                     </p>
                     <pre>
 <code class="language-python">"""CODE"""</code>
