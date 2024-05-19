@@ -106,6 +106,25 @@
                         <br>But what about values highlighted in yellow? Imagine you want to feed them as features into
                         a neural network which can only handle numerical values?
                     </p>
+                    <p>Models such as neural networks can only work with numerical data, so it is quite obvious what we
+                        need to do: we need to convert our categorical data represented as strings into numbers – at
+                        least the values in the <incode>job_title</incode> and city columns. Although the values in the
+                        <incode>postal_codes</incode> column are already converted to integers and we do not need to
+                        change their datatype in principle, they do represent categories after all. Therefore, we want
+                        to create bins (=groups) and assign each postal code to one of these created bins. Applying
+                        <a href="https://en.wikipedia.org/wiki/One-hot#Machine_learning_and_statistics">one-hot
+                            encoding</a> to the <incode>postal_code</incode> column with unique postal codes would lead
+                        to a very high-dimensional feature space. Binning postal codes into groups and then applying
+                        one-hot encoding to these groups will significantly reduce the number of dimensions while still
+                        capturing meaningful information.
+                    </p>
+                    <p>But before we start converting the string values to numbers, we need to think about the
+                        highlighted values in the <incode>job_title</incode> column, as they contain unwanted special
+                        characters. You might think that they can be ignored as we are going to convert them to numeric
+                        values anyway, but this is not the case.
+                        <br>Since the job titles have no intrinsic order that we want to preserve when converting them
+                        to numbers, we will use one-hot encoding to do the job.
+                    </p>
                     <pre>
 <code class="language-python">"""CODE"""</code>
 </pre>
