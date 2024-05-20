@@ -129,7 +129,7 @@
                         Analyst" will be treated as two different strings, which is not the behaviour we want. So we
                         need to clean up the data in the <incode>job_title</incode> column.
                     </p>
-                    <p>So here our preprocessing goals:
+                    <p>So here are our preprocessing goals:
                     <ul>
                         <li>Remove special characters from the <incode>job_title</incode> column</li>
                         <li>Create bins and assign each postal code to a bin</li>
@@ -138,12 +138,16 @@
                         </li>
                     </ul>
                     </p>
-                    <h2>Let's Build Our Custom Transformers</h2>
-                    <p>To achieve our first two goals, we will implement custom transformers as we wan to apply these
-                        transformations within our preprocessing pipeline.<br> Since scikit-learn already has a
-                        <incode>OneHotEncoder</incode> implemented, which can seamlessly integrated in our pipeline, so
-                        we don't need to code the logic of this transformation ourselves.
+                    <h2>Applying Function Transformer and Custom Transformer</h2>
+                    To clean the <incode>job_title</incode> column and bin the values in the
+                    <incode>postal_codes</incode> column, we will leverage scikit-learn's
+                    <incode>FunctionTransformer</incode> and build our
+                    own custom transformer, respectively. Incorporating these transformations within our preprocessing
+                    pipeline allows us to streamline the data preprocessing steps.
                     </p>
+                    <h3>Implementing the JobTitleCleaner</h3>
+                    All
+                    <br>
                     <pre>
 <code class="language-python">"""CODE"""</code>
 </pre>
