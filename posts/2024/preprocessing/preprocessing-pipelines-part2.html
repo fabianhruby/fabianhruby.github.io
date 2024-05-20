@@ -108,7 +108,8 @@
                     </p>
                     <p>Models such as neural networks can only work with numerical data, so it is quite obvious what we
                         need to do: we need to convert our categorical data represented as strings into numbers – at
-                        least the values in the <incode>job_title</incode> and city columns. Although the values in the
+                        least the values in the <incode>job_title</incode> and <incode>city</incode> columns. Although
+                        the values in the
                         <incode>postal_codes</incode> column are already converted to integers and we do not need to
                         change their datatype in principle, they do represent categories after all. Therefore, we want
                         to create bins (=groups) and assign each postal code to one of these created bins. Applying
@@ -118,13 +119,29 @@
                         one-hot encoding to these groups will significantly reduce the number of dimensions while still
                         capturing meaningful information.
                     </p>
-                    <p>But before we start converting the string values to numbers, we need to think about the
+                    <p>But before we start converting the string values to numbers and bin ours postal codes, we need to
+                        think about the
                         highlighted values in the <incode>job_title</incode> column, as they contain unwanted special
                         characters. You might think that they can be ignored as we are going to convert them to numeric
                         values anyway, but this is not the case.
-                        <br>Since the job titles have no intrinsic order that we want to preserve when converting them
-                        to numbers, we will use one-hot encoding to do the job.
+                        <br>Each unique string will be converted separately, meaning that for example "Data A*nalyst"
+                        and "Data
+                        Analyst" will be treated as two different strings, which is not the behaviour we want. So we
+                        need to clean up the data in the <incode>job_title</incode> column.
                     </p>
+                    <p>So here our preprocessing goals:
+                    <ul>
+                        <li>Remove special characters from the <incode>job_title</incode> column</li>
+                        <li>Create bins and assign each postal code to a bin</li>
+                        <li>Use one-hot encoding to encode the <incode>job_title</incode>, <incode>city</incode>
+                            and <incode>postal_codes_bin</incode> columns (the latter is created in the previous step)
+                        </li>
+                    </ul>
+                    </p>
+                    <h2>How to Build a Custom Transformer</h2>
+                    <p>To achieve our first two goals, we will implement custom transformers as we wan to apply these
+                        transformations within our preprocessing pipeline. <br> Since scikit-learn already has a
+                        <incode>OneHotEncoder</incode> implemented, we don't need to do this ourselves.</p>
                     <pre>
 <code class="language-python">"""CODE"""</code>
 </pre>
