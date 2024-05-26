@@ -143,14 +143,66 @@
                     <incode>postal_codes</incode> column, we will leverage scikit-learn's
                     <incode>FunctionTransformer</incode> and build our
                     own custom transformer, respectively. Incorporating these transformations within our preprocessing
-                    pipeline allows us to streamline the data preprocessing steps.
+                    pipeline allows us to streamline the data preprocessing steps. As the blog title says, we'll use
+                    some tools from the scikit-learn library, although this is not the most robust solution since we're
+                    not using the <incode>ColumnTransformer</incode>. Stay tuned for the third part of this series where
+                    we'll introduce the <incode>ColumnTransformer</incode> for a more elegant approach.
                     </p>
-                    <h3>Implementing the JobTitleCleaner</h3>
-                    All
+                    <h3>Using Scikit-learn's FunctionTransformer</h3>
+                    Here is the entire script, some of which you may already know from the <a
+                        href="/posts/2024/preprocessing/preprocessing-pipelines-part1.html">first part of
+                        this
+                        series</a>:
                     <br>
                     <pre>
-<code class="language-python">"""CODE"""</code>
+<code class="language-python">"""Script for preprocessing data"""
+
+import numpy as np
+import pandas as pd
+from sklearn.impute import SimpleImputer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import FunctionTransformer, MinMaxScaler
+
+from preprocessing import remove_special_chars
+
+# Path to our raw data
+DATA_PATH = "data/data.xlsx"
+
+# Reading in data and converting the postal_code column as an integer
+raw_data = pd.read_excel(DATA_PATH, converters={"postal_code": int})
+
+# Selecting the columns in which missing values should be imputed
+cols_to_impute = ["age", "experience_in_years", "salary_in_dollar"]
+
+# Creating our Pipeline object with a SimpleImputer and MinMaxScaler from sklearn
+pipeline_num = Pipeline(
+    [
+        ("MeanImputer", SimpleImputer(missing_values=np.nan, strategy="mean")),
+        ("MinMaxScaler", MinMaxScaler()),
+    ]
+)
+
+# Selecting the column from which special characters should be removed
+special_char_remover = FunctionTransformer(
+    remove_special_chars, kw_args={"column_name": "job_title"}
+)
+
+# Creating our second Pipeline object with our custom preprocessing function
+pipeline_cat = Pipeline([("SpecialCharRemover", special_char_remover)])
+
+# Coping our raw_data and imputing missing values with the column's mean
+imputed_data = raw_data.copy()
+imputed_data[cols_to_impute] = pipeline_num.fit_transform(raw_data[cols_to_impute])
+
+# Remove the special characters from the job_title column
+# Returns a numpy array
+cleaned_job_titles = pipeline_cat.fit_transform(imputed_data)
+# Assign cleaned values to our job_title column
+imputed_data["job_title"] = cleaned_job_titles</code>
 </pre>
+                    <p>Here is a step-by-step explanation of the above code with a focus on the part where we are using
+                        scikit-learn's <incode>FunctionTransformer</incode> in order to use our <incode>
+                            remove_special_chars</incode> function inside of our pipeline:</p>
                 </div>
             </div>
         </div>
