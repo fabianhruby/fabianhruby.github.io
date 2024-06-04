@@ -200,9 +200,96 @@ cleaned_job_titles = pipeline_cat.fit_transform(imputed_data)
 # Assign cleaned values to our job_title column
 imputed_data["job_title"] = cleaned_job_titles</code>
 </pre>
-                    <p>Here is a step-by-step explanation of the above code with a focus on the part where we are using
-                        scikit-learn's <incode>FunctionTransformer</incode> in order to use our <incode>
+                    <p>And here is the code for the imported <incode>remove_special_chars</incode> function:</p>
+
+                    <pre>
+    <code class="language-python">
+def remove_special_chars(df: pd.DataFrame, column_name: str) -> pd.Series:
+    """
+    Removes special characters from a column.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The DataFrame containing the column to be cleaned.
+    col_name : str
+        The name of the column which values should be cleaned from special characters.
+
+    Returns
+    -------
+    pd.Series
+        The column with its values cleaned from special characters.
+    """
+    # Define pattern for special characters
+    pattern = r"[\*\/!_\-.,;?$%&$\^°]"
+    return df[column_name].str.replace(pattern, "", regex=True)
+    </code>
+    </pre>
+                    <p>The following step-by-step explanation of the above code will focus on the part where we are
+                        using scikit-learn's <incode>FunctionTransformer</incode> in order to use our <incode>
                             remove_special_chars</incode> function inside of our pipeline:</p>
+                    <h3>1. Imputing and Scaling Numerical Data</h3>
+                    <pre><code class="language-python">"""Script for preprocessing data"""
+
+import numpy as np
+import pandas as pd
+from sklearn.impute import SimpleImputer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import FunctionTransformer, MinMaxScaler
+
+from preprocessing import remove_special_chars
+
+# Path to our raw data
+DATA_PATH = "data/data.xlsx"
+
+# Reading in data and converting the postal_code column as an integer
+raw_data = pd.read_excel(DATA_PATH, converters={"postal_code": int})
+
+# Selecting the columns in which missing values should be imputed
+cols_to_impute = ["age", "experience_in_years", "salary_in_dollar"]
+
+# Creating our Pipeline object with a SimpleImputer and MinMaxScaler from sklearn
+pipeline_num = Pipeline(
+    [
+        ("MeanImputer", SimpleImputer(missing_values=np.nan, strategy="mean")),
+        ("MinMaxScaler", MinMaxScaler()),
+    ]
+)</code></pre>
+                    <p>The first part of the script preprocesses numerical data.It imputes missing
+                        values in the <incode>age</incode>, <incode>experience_in_years</incode> and <incode>
+                            salary_in_dollar</incode> columns with the mean value and then scales the data between 0 and
+                        1 using a MinMaxScaler. Please feel free to have a look at the <a
+                            href="/posts/2024/preprocessing/preprocessing-pipelines-part1.html">first part of
+                            this
+                            series</a> for more details.</p>
+                    <h3>Transforming our Function with FunctionTransformer</h3>
+                    <pre><code class="language-python"># Selecting the column from which special characters should be removed
+special_char_remover = FunctionTransformer(
+    remove_special_chars, kw_args={"column_name": "job_title"}
+)</code></pre>
+                    <ul>
+                        <li>
+                            <incode>FunctionTransformer</incode> allows us to apply custom functions th our data within
+                            a
+                            pipeline. In this case, we are transforming our imported <incode>remove_special_chars
+                            </incode>
+                            function.
+                        </li>
+                        <li>
+                            <incode>remove_special_cars</incode> refers to the earlier imported function that removes
+                            special characters from a DataFrame column.
+                        </li>
+                        <li>The argument <incode>kw_args={"column_name": "job_title"}</incode> allows us to specify
+                            keyword
+                            arguments – in this case we want to set the <incode>column_name</incode> argument to
+                            "job_title"
+                            – for our custom <incode>remove_special_chars</incode> function to ensure the right column
+                            is
+                            cleaned.</li>
+                        <p>In summary, this code creates a resuable transformer based on a custom function that can
+                            easily be included in a scikit-learn pipeline to clean special characters from a specific
+                            column.</p>
+                    </ul>
                 </div>
             </div>
         </div>
