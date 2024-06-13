@@ -342,60 +342,59 @@ pipeline_num = Pipeline(
                             this
                             series</a> for more details.</p>
                     <h3>Transforming our Functions with Scikit-learn's FunctionTransformer</h3>
-                    <ul>
-                        <li>
-                            <incode>remove_special_chars</incode>
-                            <p></p>
-                            <ul>
 
-                                <pre><code class="language-python"># Selecting the column from which special characters should be removed
+                    <incode>remove_special_chars</incode>
+                    <p></p>
+
+
+                    <pre><code class="language-python"># Selecting the column from which special characters should be removed
 special_char_remover = FunctionTransformer(
     remove_special_chars,
     kw_args={"column_name": "job_title"}
 ).set_output(transform="pandas")</code></pre>
 
 
-                                <li>
-                                    <incode>FunctionTransformer</incode> allows us to apply custom functions to data
-                                    within
-                                    a
-                                    pipeline. In this case, we are transforming our imported <incode>
-                                        remove_special_chars</incode>
-                                    function.
-                                </li>
-                                <li>
-                                    <incode>remove_special_cars</incode> refers to the earlier imported function that
-                                    removes
-                                    special characters from a DataFrame column.
-                                </li>
-                                <li>The argument <incode>kw_args={"column_name": "job_title"}</incode> allows us to
-                                    specify
-                                    keyword
-                                    arguments – in this case we want to set the <incode>column_name</incode> argument to
-                                    "job_title"
-                                    – for our custom <incode>remove_special_chars</incode> function to ensure the right
-                                    column
-                                    is
-                                    cleaned.</li>
-                                <li>The <incode>.set_output(transform="pandas")</incode> method is used to specify the
-                                    output type of the transformer. By default, Scikit-learn transformers return NumPy
-                                    arrays. However, when working with DataFrames, it's often more convenient to
-                                    maintain the DataFrame format to preserve column names and other metadata. This is
-                                    especially useful when you need to apply further transformations or inspect the
-                                    transformed data.</li>
-                                <p>In summary, this code creates a resuable transformer based on a custom function that
-                                    can
-                                    easily be included in a scikit-learn pipeline to clean special characters from a
-                                    specific
-                                    column.</p>
-                            </ul>
+                    <li>
+                        <incode>FunctionTransformer</incode> allows us to apply custom functions to data
+                        within
+                        a
+                        pipeline. In this case, we are transforming our imported <incode>
+                            remove_special_chars</incode>
+                        function.
+                    </li>
+                    <li>
+                        <incode>remove_special_cars</incode> refers to the earlier imported function that
+                        removes
+                        special characters from a DataFrame column.
+                    </li>
+                    <li>The argument <incode>kw_args={"column_name": "job_title"}</incode> allows us to
+                        specify
+                        keyword
+                        arguments – in this case we want to set the <incode>column_name</incode> argument to
+                        "job_title"
+                        – for our custom <incode>remove_special_chars</incode> function to ensure the right
+                        column
+                        is
+                        cleaned.</li>
+                    <li>The <incode>.set_output(transform="pandas")</incode> method is used to specify the
+                        output type of the transformer. By default, Scikit-learn transformers return NumPy
+                        arrays. However, when working with DataFrames, it's often more convenient to
+                        maintain the DataFrame format to preserve column names and other metadata. This is
+                        especially useful when you need to apply further transformations or inspect the
+                        transformed data.</li>
+                    <p>In summary, this code creates a resuable transformer based on a custom function that
+                        can
+                        easily be included in a scikit-learn pipeline to clean special characters from a
+                        specific
+                        column.</p>
+                    </ul>
 
-                        <li>
-                            <incode>one_hot_encode_columns</incode>
-                        </li>
-                        <p></p>
-                        <ul>
-                            <pre><code class="language-python"># Name the columns which should be one hot encoded
+
+                    <incode>one_hot_encode_columns</incode>
+
+                    <p></p>
+
+                    <pre><code class="language-python"># Name the columns which should be one hot encoded
 columns_to_encode = ["job_title", "city", "postal_code_bin"]
 
 # Creating our one hot encoding with scikit-learn's FunctionTransformer
@@ -404,17 +403,18 @@ one_hot_encoder = FunctionTransformer(
     kw_args={"columns_to_encode": columns_to_encode},
 )</code>
 </pre>
-                            <li>Similarly, we use <incode>FunctionTransformer</incode> to convert our <incode>
-                                    one_hot_encode_columns</incode> function into a transformer for one-hot encoding of
-                                specified categorical columns.</li>
-                        </ul>
-                        <p></p>
-                        <h3>Building the Categorical Data Preprocessing Pipeline</h3>
-                        <p>Let's now move on to creating the second pipeline that handles the categorical data. This
-                            pipeline contains our custom preprocessing functions and transformers to ensure that our
-                            categorical data is effectively cleaned, binned and one-hot encoded. <br>Here is the code to
-                            create this pipeline:
-                        <pre><code class="language-python"># Creating our second Pipeline object with our custom preprocessing function and our CustomTransformers
+                    <li>Similarly, we use <incode>FunctionTransformer</incode> to convert our <incode>
+                            one_hot_encode_columns</incode> function into a transformer for one-hot encoding of
+                        specified categorical columns.</li>
+                    </ul>
+                    <p></p>
+                    <h3>Building the Categorical Data Preprocessing Pipeline</h3>
+                    <p>Let's now move on to creating the second pipeline that handles the categorical data. This
+                        pipeline contains our custom preprocessing functions and transformers to ensure that our
+                        categorical data is effectively cleaned, binned and one-hot encoded. <br>Here is the code to
+                        create this pipeline:
+                    <pre><code class="language-python"># Creating our second Pipeline object with our custom preprocessing function
+# and our CustomTransformers
 pipeline_cat = Pipeline(
     [
         ("SpecialCharRemover", special_char_remover),
@@ -423,31 +423,30 @@ pipeline_cat = Pipeline(
     ]
 )
 </code></pre>
-                        <p></p>
-                        <ol>
-                            <h4>
-                                <li>Removing Special Characters from the job_title column</li>
-                            </h4>
-                            <p></p>
-                            <pre><code class="language-python">("SpecialCharRemover", special_char_remover)
+                    <p></p>
+                    <h4>
+                        1. Removing Special Characters from the job_title column
+                    </h4>
+                    <p></p>
+                    <pre><code class="language-python">("SpecialCharRemover", special_char_remover)
 </code></pre>
-                            <p>This step uses our transformer <incode>special_char_remover</incode>, which cleans the
-                                <incode>job_title</incode> column by removing unwanted special characters. This ensures
-                                that
-                                variations in job titles caused by special characters do not lead to redundant
-                                categories.
-                            </p>
-                            <h4>
-                                <li>Creating Bins for Postal Codes</li>
-                            </h4>
-                            <p></p>
-                            <pre><code class="language-python">("PostalCodeBinner", PostalCodeBinTransformer())
+                    <p>This step uses our transformer <incode>special_char_remover</incode>, which cleans the
+                        <incode>job_title</incode> column by removing unwanted special characters. This ensures
+                        that
+                        variations in job titles caused by special characters do not lead to redundant
+                        categories.
+                    </p>
+                    <h4>
+                        2. Creating Bins for Postal Codes
+                    </h4>
+                    <p></p>
+                    <pre><code class="language-python">("PostalCodeBinner", PostalCodeBinTransformer())
 </code></pre>
-                            <p>This custom transformer, <incode>PostalCodeBinTransformer</incode>, bins postal codes
-                                into predefined groups. This reduces the high-dimensional feature space that would
-                                result from one-hot encoding individual postal codes. Let's look at how this custom
-                                transformer is implemented:</p>
-                            <pre><code class="language-python">class PostalCodeBinTransformer(BaseEstimator, TransformerMixin):
+                    <p>This custom transformer, <incode>PostalCodeBinTransformer</incode>, bins postal codes
+                        into predefined groups. This reduces the high-dimensional feature space that would
+                        result from one-hot encoding individual postal codes. Let's look at how this custom
+                        transformer is implemented:</p>
+                    <pre><code class="language-python">class PostalCodeBinTransformer(BaseEstimator, TransformerMixin):
     def __init__(self):
         self.bins = [
             0, 10000, 20000, 30000, 40000,
@@ -470,71 +469,71 @@ pipeline_cat = Pipeline(
                                )
         return X
 </code></pre>
-                            <p>In the context of creating custom transformers in scikit-learn, having both a <incode>fit
-                                </incode> and a <incode>transform</incode> function are necessary to maintain to the
-                                interface expected by the scikit-learn pipeline. Even if the transformer doesn't require
-                                fitting, the presence of these methods ensures compatibility with the pipeline's
-                                operation.</p>
-                            <p><strong>Initialization (__init__ method)</strong><br>
-                                The <incode>__init__</incode> method is used to initialize the transformer</incode>. In
-                                the
-                                <incode>PostalCodeBinTransformer, it defines the bins and labels that will be used to
-                                    categorize
-                                    postal codes.
-                            </p>
-                            <p><strong>Fitting (<incode>fit</incode> method)</strong><br>
-                                The <incode>fit</incode> method is intended to prepare the transformer based on the
-                                training data. However, for the <incode>PostalCodeBinTransformer</incode>, no
-                                preparation based on the
-                                data is needed, so the method simply returns self.<br>
-                                Even though the <incode>fit</incode> method doesn't do anything in this transformer, it
-                                is required because scikit-learn expects every transformer to have this method. This
-                                ensures the transformer can be integrated seamlessly into a pipeline, where
-                                <incode>fit</incode> will be called before <incode>transform</incode>.
-                            </p>
-                            <p><strong>Transformation (<incode>transform</incode> method)</strong><br>
-                                The <incode>transform</incode> method is where the actual data transformation happens.
-                                For the <incode>PostalCodeBinTransformer</incode>, this involves binning the postal
-                                codes into predefined groups.<br>
-                                In the <incode>transform</incode> method, the following happens:
-                            <ul>
-                                <li>
+                    <p>In the context of creating custom transformers in scikit-learn, having both a <incode>fit
+                        </incode> and a <incode>transform</incode> function are necessary to maintain to the
+                        interface expected by the scikit-learn pipeline. Even if the transformer doesn't require
+                        fitting, the presence of these methods ensures compatibility with the pipeline's
+                        operation.</p>
+                    <p><strong>Initialization (__init__ method)</strong><br>
+                        The <incode>__init__</incode> method is used to initialize the transformer</incode>. In
+                        the
+                        <incode>PostalCodeBinTransformer, it defines the bins and labels that will be used to
+                            categorize
+                            postal codes.
+                    </p>
+                    <p><strong>Fitting (<incode>fit</incode> method)</strong><br>
+                        The <incode>fit</incode> method is intended to prepare the transformer based on the
+                        training data. However, for the <incode>PostalCodeBinTransformer</incode>, no
+                        preparation based on the
+                        data is needed, so the method simply returns self.<br>
+                        Even though the <incode>fit</incode> method doesn't do anything in this transformer, it
+                        is required because scikit-learn expects every transformer to have this method. This
+                        ensures the transformer can be integrated seamlessly into a pipeline, where
+                        <incode>fit</incode> will be called before <incode>transform</incode>.
+                    </p>
+                    <p><strong>Transformation (<incode>transform</incode> method)</strong><br>
+                        The <incode>transform</incode> method is where the actual data transformation happens.
+                        For the <incode>PostalCodeBinTransformer</incode>, this involves binning the postal
+                        codes into predefined groups.<br>
+                        In the <incode>transform</incode> method, the following happens:
+                    <ul>
+                        <li>
 
-                                    Conversion to integer: The postal codes are converted to integers to ensure they can
-                                    be properly binned.
-                                </li>
-                                <li>
-                                    Binning: The <incode>pd.cut</incode> function is used to bin the postal codes into
-                                    the specified
-                                    ranges (bins).
-                                </li>
-                                <li> Adding a new column: A new column, <incode>postal_code_bin</incode>, is added to
-                                    the DataFrame to
-                                    store the bin labels.</li>
-                            </ul>
-                            </p>
-                            <p>By defining both the <incode>fit</incode> and the <incode>transform</incode> method, the
-                                <incode>PostalCodeBinTransformer</incode> becomes a well-formed scikit-learn
-                                transformer, ready to be used in a preprocessing pipeline. This adherence to the
-                                expected interface allows for seamless integration and consistent behavior within the
-                                scikit-learn framework.
-                            </p>
-                            <h4>
-                                <li>One-Hot Encoding Categorical Columns</li>
-                            </h4>
-                            <p></p>
-                            <pre><code class="language-python">("OneHotEncoder", one_hot_encoder)</code></pre>
-                            <p>This step uses our custom transformer <incode>one_hot_encoder</incode>, which one-hot
-                                encodes the specified categorical columns (<incode>job_title</incode>, <incode>city
-                                </incode> and <incode>postal_code_bin</incode>). One-hot encoding converts categorical
-                                variables into a form that can be provided to machine learning algorithms to do a better
-                                job in
-                                prediction.</p>
-                        </ol>
-                        <h3>Applying the Pipeline</h3>
-                        <p>After defining the pipeline, we can apply it to our data to preprocess it:</p>
-                        <p></p>
-                        <pre><code class="language-python"># Copying our raw_data and imputing missing values with the column's mean
+                            Conversion to integer: The postal codes are converted to integers to ensure they can
+                            be properly binned.
+                        </li>
+                        <li>
+                            Binning: The <incode>pd.cut</incode> function is used to bin the postal codes into
+                            the specified
+                            ranges (bins).
+                        </li>
+                        <li> Adding a new column: A new column, <incode>postal_code_bin</incode>, is added to
+                            the DataFrame to
+                            store the bin labels.</li>
+                    </ul>
+                    </p>
+                    <p>By defining both the <incode>fit</incode> and the <incode>transform</incode> method, the
+                        <incode>PostalCodeBinTransformer</incode> becomes a well-formed scikit-learn
+                        transformer, ready to be used in a preprocessing pipeline. This adherence to the
+                        expected interface allows for seamless integration and consistent behavior within the
+                        scikit-learn framework.
+                    </p>
+                    <h4>
+                        3. One-Hot Encoding Categorical Columns
+                    </h4>
+                    <p></p>
+                    <pre><code class="language-python">("OneHotEncoder", one_hot_encoder)</code></pre>
+                    <p>This step uses our custom transformer <incode>one_hot_encoder</incode>, which one-hot
+                        encodes the specified categorical columns (<incode>job_title</incode>, <incode>city
+                        </incode> and <incode>postal_code_bin</incode>). One-hot encoding converts categorical
+                        variables into a form that can be provided to machine learning algorithms to do a better
+                        job in
+                        prediction.</p>
+                    </ol>
+                    <h3>Applying the Pipeline</h3>
+                    <p>After defining the pipeline, we can apply it to our data to preprocess it:</p>
+                    <p></p>
+                    <pre><code class="language-python"># Copying our raw_data and imputing missing values with the column's mean
 imputed_data = raw_data.copy()
 imputed_data[cols_to_impute] = pipeline_num.fit_transform(raw_data[cols_to_impute])
 
@@ -543,54 +542,54 @@ imputed_data[cols_to_impute] = pipeline_num.fit_transform(raw_data[cols_to_imput
 # One-not encode the columns in the list columns_to_encode
 cleaned_data = pipeline_cat.fit_transform(imputed_data)
 </code></pre>
-                        <p>We first create a copy of the raw data and then apply the numerical data preprocessing
-                            pipeline (<incode>pipeline_num</incode>) to impute missing values and scale the specified
-                            numerical columns.</p>
+                    <p>We first create a copy of the raw data and then apply the numerical data preprocessing
+                        pipeline (<incode>pipeline_num</incode>) to impute missing values and scale the specified
+                        numerical columns.</p>
 
-                        <p>Next, we apply the categorical data preprocessing pipeline (<incode>pipeline_cat</incode>) to
-                            the imputed data. This step removes special characters from the <incode>job_title</incode>
-                            column, bins the postal codes, and one-hot encodes the categorical columns.</p>
+                    <p>Next, we apply the categorical data preprocessing pipeline (<incode>pipeline_cat</incode>) to
+                        the imputed data. This step removes special characters from the <incode>job_title</incode>
+                        column, bins the postal codes, and one-hot encodes the categorical columns.</p>
 
-                        <p>To get a better understanding of what happens before one-hot encoding, here is an
-                            intermediate state of the data showing the state before one-hot encoding:
-                            <br><br>
-                            <img class="img-fluid"
-                                src="/assets/img/posts/2024/preprocessing/preprocessing-with-scikit-learn-pipelines-part2-data-before-ohe.png">
-                            <br>
-                        <ol>
-                            <li>
-                                the column <incode>job_title</incode> no longer contains any special characters</li>
-                            <li>an additional column <incode>postal_code_bin</incode> has been added, which we can use
-                                for our one-hot
-                                encoding in the next step</li>
-                        </ol>
-                        </p>
-                        <p>After running our code and looking at our transformed data, everything looks fine:</p>
-                        <img class="img-fluid"
-                            src="/assets/img/posts/2024/preprocessing/preprocessing-with-scikit-learn-pipelines-part2-data-final.png">
-                        <br>
-                        <p>As the one-hot-encoded columns for the job titles and statuses are not visible in the
-                            screenshot above, here are two more screenshots for the sake of completeness:</p>
-                        <img class="img-fluid"
-                            src="/assets/img/posts/2024/preprocessing/preprocessing-with-scikit-learn-pipelines-part2-data-job-title.png">
-                        <span class="annotation">One-hot-encoded values of the job_title column.</span>
+                    <p>To get a better understanding of what happens before one-hot encoding, here is an
+                        intermediate state of the data showing the state before one-hot encoding:
                         <br><br>
                         <img class="img-fluid"
-                            src="/assets/img/posts/2024/preprocessing/preprocessing-with-scikit-learn-pipelines-part2-data-city.png">
-                        <span class="annotation">One-hot-encoded values of the city column.</span>
+                            src="/assets/img/posts/2024/preprocessing/preprocessing-with-scikit-learn-pipelines-part2-data-before-ohe.png">
                         <br>
-                        <p>By integrating these preprocessing steps into a single pipeline, we streamline the data
-                            cleaning and transformation process, making it more efficient and less prone to error. This
-                            setup also ensures that our data is consistently processed in the same way every time, which
-                            is critical for reproducible and reliable machine learning workflows.</p>
-                        <h3>Conclusion</h3>
-                        <p>In this part of the series, we have extended our preprocessing pipeline to handle categorical
-                            data by removing special characters, binning postal codes, and applying one-hot encoding.
-                            These steps are crucial for preparing data for machine learning models, such as neural
-                            networks, which require numerical input. Stay tuned for the third and final part of
-                            this series, where we will introduce scikit-learn's <incode>ColumnTransformer</incode> for a
-                            more
-                            elegant and robust approach to preprocessing mixed data types.</p>
+                    <ol>
+                        <li>
+                            the column <incode>job_title</incode> no longer contains any special characters</li>
+                        <li>an additional column <incode>postal_code_bin</incode> has been added, which we can use
+                            for our one-hot
+                            encoding in the next step</li>
+                    </ol>
+                    </p>
+                    <p>After running our code and looking at our transformed data, everything looks fine:</p>
+                    <img class="img-fluid"
+                        src="/assets/img/posts/2024/preprocessing/preprocessing-with-scikit-learn-pipelines-part2-data-final.png">
+                    <br>
+                    <p>As the one-hot-encoded columns for the job titles and statuses are not visible in the
+                        screenshot above, here are two more screenshots for the sake of completeness:</p>
+                    <img class="img-fluid"
+                        src="/assets/img/posts/2024/preprocessing/preprocessing-with-scikit-learn-pipelines-part2-data-job-title.png">
+                    <span class="annotation">One-hot-encoded values of the job_title column.</span>
+                    <br><br>
+                    <img class="img-fluid"
+                        src="/assets/img/posts/2024/preprocessing/preprocessing-with-scikit-learn-pipelines-part2-data-city.png">
+                    <span class="annotation">One-hot-encoded values of the city column.</span>
+                    <br>
+                    <p>By integrating these preprocessing steps into a single pipeline, we streamline the data
+                        cleaning and transformation process, making it more efficient and less prone to error. This
+                        setup also ensures that our data is consistently processed in the same way every time, which
+                        is critical for reproducible and reliable machine learning workflows.</p>
+                    <h3>Conclusion</h3>
+                    <p>In this part of the series, we have extended our preprocessing pipeline to handle categorical
+                        data by removing special characters, binning postal codes, and applying one-hot encoding.
+                        These steps are crucial for preparing data for machine learning models, such as neural
+                        networks, which require numerical input. Stay tuned for the third and final part of
+                        this series, where we will introduce scikit-learn's <incode>ColumnTransformer</incode> for a
+                        more
+                        elegant and robust approach to preprocessing mixed data types.</p>
                 </div>
             </div>
         </div>
