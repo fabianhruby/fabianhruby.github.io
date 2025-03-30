@@ -63,7 +63,86 @@
     </nav>
     <!-- Page Header-->
     <header class="masthead"
-        style="background-image: url('/assets/img/posts/2025/preprocessing/preprocessing-with-scikit-learn-pipelines-part3.jpg')">
+        style="background-image: url('/assets/img/posts/2025/preprocessing/preprocessing-with-scikit-learn-pipelines-part3.<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Preprocessing with Scikit-learn Pipelines (3/3)">
+    <meta property="og:url"
+        content="https://fabianhruby.github.io/posts/2025/preprocessing/preprocessing-pipelines-part3.html">
+    <meta property="og:image"
+        content="https://fabianhruby.github.io/assets/img/posts/2025/preprocessing/preprocessing-with-scikit-learn-pipelines-part3.png">
+    <meta property="og:description"
+        content="This series of articles explores the creation of robust data preprocessing pipelines using scikit-learn and pandas. 
+        Part 1 introduces fundamental preprocessing steps, while Part 2 delves into applying individual transformations. 
+        The concluding Part 3 showcases the power and elegance of scikit-learn's ColumnTransformer for handling mixed data types, 
+        including numerical imputation and scaling, custom transformations for text and categorical features like postal code binning, and one-hot encoding, 
+        ultimately leading to efficient and maintainable preprocessing workflows.">
+    <meta property="article:author" content="Fabian Hruby">
+    <meta property="article:tag" content="data science">
+    <meta property="article:tag" content="scikit-learn">
+    <meta property="article:tag" content="sklearn">
+    <meta property="article:tag" content="data preprocessing">
+    <meta property="article:tag" content="machine learning">
+    <title>Preprocessing with scikit-learn Pipelines | Part 3 - Byte-Sized Insights</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/css/styles.css" rel="stylesheet" />
+    <link href="/css/prism-atom-dark.css" rel="stylesheet" />
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+        MathJax.Hub.Config({messageStyle: 'none',tex2jax: {preview: 'none'}});
+      </script>
+    <script type="text/javascript" charset="utf-8" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+
+<body>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="/index.html">Byte-Sized Insights</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/about.html">About</a></li>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Page Header-->
+    <header class="masthead"
+        style="background-image: url('/assets/img/posts/2025/preprocessing/preprocessing-with-scikit-learn-pipelines-part3.png')">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-6 col-lg-8 col-xl-8">
+                    <div class="post-heading">
+                        <h1>Preprocessing with Scikit-learn Pipelines 3/3</h1>
+                        <h2 class="subheading">The Elegance and Robustness of ColumnTransformer</h2>
+                        <span class="meta">
+                            Posted by Fabian Hruby on March 30, 2025
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>')">
         <div class="container position-relative px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-6 col-lg-8 col-xl-8">
