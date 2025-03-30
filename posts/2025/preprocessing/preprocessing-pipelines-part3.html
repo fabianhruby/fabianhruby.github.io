@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Preprocessing with Scikit-learn Pipelines (3/3)">
+    <meta property="og:url"
+        content="https://fabianhruby.github.io/posts/2025/preprocessing/preprocessing-pipelines-part3.html">
+    <meta property="og:image"
+        content="https://fabianhruby.github.io/assets/img/posts/2025/preprocessing/preprocessing-with-scikit-learn-pipelines-part3.png">
+    <meta property="og:description"
+        content="This series of articles explores the creation of robust data preprocessing pipelines using scikit-learn and pandas. 
+        Part 1 introduces fundamental preprocessing steps, while Part 2 delves into applying individual transformations. 
+        The concluding Part 3 showcases the power and elegance of scikit-learn's ColumnTransformer for handling mixed data types, 
+        including numerical imputation and scaling, custom transformations for text and categorical features like postal code binning, and one-hot encoding, 
+        ultimately leading to efficient and maintainable preprocessing workflows.">
+    <meta property="article:author" content="Fabian Hruby">
+    <meta property="article:tag" content="data science">
+    <meta property="article:tag" content="scikit-learn">
+    <meta property="article:tag" content="sklearn">
+    <meta property="article:tag" content="data preprocessing">
+    <meta property="article:tag" content="machine learning">
+    <title>Preprocessing with scikit-learn Pipelines | Part 3 - Byte-Sized Insights</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/css/styles.css" rel="stylesheet" />
+    <link href="/css/prism-atom-dark.css" rel="stylesheet" />
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+        MathJax.Hub.Config({messageStyle: 'none',tex2jax: {preview: 'none'}});
+      </script>
+    <script type="text/javascript" charset="utf-8" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+
+<body>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="/index.html">Byte-Sized Insights</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/about.html">About</a></li>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Page Header-->
+    <header class="masthead"
+        style="background-image: url('/assets/img/posts/2025/preprocessing/preprocessing-with-scikit-learn-pipelines-part3.jpg')">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-6 col-lg-8 col-xl-8">
+                    <div class="post-heading">
+                        <h1>Preprocessing with Scikit-learn Pipelines 3/3</h1>
+                        <h2 class="subheading">The Elegance and Robustness of ColumnTransformer</h2>
+                        <span class="meta">
+                            Posted by Fabian Hruby on March 30, 2025
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Post Content-->
+    <article class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-6 justify-content-center">
+                <div class="col-md-10 col-lg-10 col-xl-8">
+<p>
+Welcome back to our blog series on Scikit-Learn Pipelines! 
+After exploring the fundamentals of pipelines in <a href="/posts/2024/preprocessing/preprocessing-pipelines-part1.html">part 1</a> 
+and discussing the necessity of robust preprocessing steps for various data types in <a href="/posts/2024/preprocessing/preprocessing-pipelines-part2.html">part 2</a>, 
+today we're diving deep into a tool that elevates data preprocessing in Scikit-Learn to a new level: the <incode>ColumnTransformer</incode>.
+</p>
+
+<p>
+In the <a href="/posts/2024/preprocessing/preprocessing-pipelines-part2.html">previous article</a>, 
+we saw the importance of applying different preprocessing steps to different columns in our dataset. 
+We sometimes resorted to manually selecting columns and creating separate pipelines for numerical and categorical features. 
+While this works, it can quickly become cluttered and error-prone, especially as our dataset grows and becomes more complex. 
+This is precisely where the ColumnTransformer comes in to offer us an elegant and robust solution.
+</p>
+
+<h3>The ColumnTransformer: A Conductor for Your Data</h3>
+
+<p>
+The <incode>ColumnTransformer</incode> is a class in Scikit-Learn that allows us to apply different transformers to different groups of columns in our DataFrame. 
+</p>
+
+<ul>
+    The main advantages of the <incode>ColumnTransformer</incode> lie in its ability to:
+    <li>
+        <b>Organize and Improve Readability</b>: It centralizes all preprocessing logic, making our code much cleaner and easier to understand.
+    </li>
+    <li>
+        <b>Enhance Robustness</b>: It enables us to apply specific transformations to precisely the columns they are intended for, thereby avoiding potential errors caused by accidentally applying a transformation to the wrong data type.
+    </li>
+    <li>
+        <b>Improve Maintainability</b>: Changes to the preprocessing of specific columns can be made in isolation without affecting the rest of the pipeline.
+    </li>
+</ul>
+<p>Now, let's take a look at a concrete example to see the power of the <incode>ColumnTransformer</incode> in action.</p>
+
+<h4>Important Note</h4>
+<p>
+    The code shown is intentionally kept simple to illustrate the functionality of the <incode>ColumnTransformer</incode>. 
+    In the real world, it would be advisable to include additional checks to ensure, for example, that the data types of the columns meet expectations. 
+    More comprehensive error handling would also further enhance the robustness of the code. 
+    Furthermore, in the interest of clarity and keeping the focus squarely on the <incode>ColumnTransformer</incode>, 
+    some best practices might have been intentionally overlooked to maintain simplicity. 
+    The primary goal of this article was to highlight the strength and elegance of the <incode>ColumnTransformer</incode> without getting bogged down in overly complex code.
+</p>
+
+<h3>Application Example: Comprehensive Data Preprocessing with ColumnTransformer</h3>
+<p>
+Consider the following code, which demonstrates how we can use the ColumnTransformer to apply various preprocessing steps to a sample dataset:
+</p>
+<pre><code class="language-python">import pandas as pd
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import (
+    FunctionTransformer,
+    MinMaxScaler,
+    OneHotEncoder,
+)
+
+from preprocessing import PostalCodeBinTransformer, remove_special_chars
+
+# Path to the raw data
+DATA_PATH = "data/data.xlsx"
+
+# Read data and convert postal_code to integer
+raw_data = pd.read_excel(DATA_PATH, converters={"postal_code": int})
+
+# Define numerical columns
+COLS_TO_ENCODE = ["age", "experience_in_years", "salary_in_dollar"]
+
+# Pipeline for numerical data: imputation and scaling
+numerical_pipeline = Pipeline(
+    [("imputer", SimpleImputer(strategy="mean")), ("scaler", MinMaxScaler())]
+)
+
+# Transformer for special characters in job titles
+special_char_remover = FunctionTransformer(
+    remove_special_chars,
+    validate=False,
+    feature_names_out="one-to-one",
+).set_output(transform="pandas")
+
+
+# ColumnTransformer for all preprocessing steps
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("numerical", numerical_pipeline, COLS_TO_ENCODE),
+        ("job_title", special_char_remover, ["job_title"]),
+        ("postal_code", PostalCodeBinTransformer(), ["postal_code"]),
+        ("city", "passthrough", ["city"]),
+    ],
+    remainder="drop",  # Remove other columns (e.g., first_name)
+    verbose_feature_names_out=False,
+)
+
+# One-Hot Encoding for categorical features
+ohe_transformer = ColumnTransformer(
+    transformers=[
+        (
+            "ohe",
+            OneHotEncoder(handle_unknown="ignore", sparse_output=False),
+            ["job_title", "city", "postal_code_bin"],
+        )
+    ],
+    remainder="passthrough",  # Keep numerical data
+    verbose_feature_names_out=False,
+).set_output(transform="pandas")
+
+
+preprocessed_data = preprocessor.fit_transform(raw_data)
+preprocessed_df = pd.DataFrame(
+    preprocessed_data, columns=preprocessor.get_feature_names_out()
+)
+
+cleaned_data = ohe_transformer.fit_transform(preprocessed_df)
+
+# Display results
+pd.set_option("display.max_columns", 8)
+pd.set_option("display.expand_frame_repr", False)
+print(cleaned_data.head())
+</code></pre>
+
+<p>Let's break down this code step by step:</p>
+<h4>1. Importing Libraries:</h4>
+
+<pre><code class="language-python">import pandas as pd
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import (
+    FunctionTransformer,
+    MinMaxScaler,
+    OneHotEncoder,
+)
+
+from preprocessing import PostalCodeBinTransformer, remove_special_chars
+</code></pre>
+<p>
+We import necessary libraries from <incode>pandas</incode> for data manipulation and various modules from <incode>sklearn</incode> for preprocessing, 
+including <incode>ColumnTransformer</incode>,<incode>SimpleImputer</incode>, <incode>Pipeline</incode>, <incode>FunctionTransformer</incode>, <incode>MinMaxScaler</incode>, and <incode>OneHotEncoder</incode>. 
+We also import the custom transformer <incode>PostalCodeBinTransformer</incode> and the function <incode>remove_special_chars</incode> from the <incode>preprocessing.py</incode> file.
+</p>
+
+
+
+<h4>2. Defining Data Path and Reading Data:</h4>
+
+<pre><code class="language-python"># Path to the raw data
+DATA_PATH = "data/data.xlsx"
+
+# Read data and convert postal_code to integer
+raw_data = pd.read_excel(DATA_PATH, converters={"postal_code": int})
+</code></pre>
+<p>
+We define the path to our raw data file (<incode>data.xlsx</incode>) and read the data into a pandas DataFrame. 
+The <incode>converters</incode> argument in <incode>pd.read_excel</incode> ensures that the <incode>postal_code</incode> column is read as an integer.
+</p>
+
+
+<h4>3. Defining Numerical Columns:</h4>
+
+<pre><code class="language-python"># Define numerical columns
+    COLS_TO_ENCODE = ["age", "experience_in_years", "salary_in_dollar"]
+</code></pre>
+<p>We create a list of column names that we consider numerical features.</p>
+
+<h4>4. Creating a Pipeline for Numerical Data:</h4>
+
+<pre><code class="language-python"># Pipeline for numerical data: imputation and scaling
+numerical_pipeline = Pipeline(
+    [("imputer", SimpleImputer(strategy="mean")), ("scaler", MinMaxScaler())]
+)
+</code></pre>
+
+
+<p>
+Here, we define a Scikit-Learn <incode>Pipeline</incode> to handle the preprocessing of our numerical features. This pipeline consists of two steps:
+</p>
+<ul>
+    <li>
+        <incode>SimpleImputer(strategy="mean")</incode>: This step will replace any missing values in the numerical columns with the mean of that column.
+    </li>
+    <li>
+        <incode>MinMaxScaler()</incode>: This step will scale the numerical features to a range between 0 and 1.
+    </li>
+</ul>
+
+<h4>5. Creating a Transformer for Special Characters in Job Titles:</h4>
+
+<pre><code class="language-python"># Transformer for special characters in job titles
+special_char_remover = FunctionTransformer(
+    remove_special_chars,
+    validate=False,
+    feature_names_out="one-to-one",
+).set_output(transform="pandas")
+</code></pre>
+
+
+<p>
+We use <incode>FunctionTransformer</incode> to apply the <incode>remove_special_chars</incode> function (defined in <incode>preprocessing.py</incode>) to the <incode>job_title</incode> column.
+</p>
+<ul>
+    <li>
+        remove_special_chars: This function takes a pandas Series as input and removes any special characters based on a defined regular expression.
+    </li>
+    <li>
+        <incode>validate=False</incode> We set this to <incode>False</incode> as we are confident in the function's input.
+    </li>
+    <li>
+        <incode>feature_names_out="one-to-one"</incode> This ensures that the output column name is the same as the input column name.
+    </li>
+    <li>
+        <incode>.set_output(transform="pandas")</incode> This ensures that the output of the transformer is a pandas DataFrame.
+    </li>
+</ul>
+
+<h4>Explanation of preprocessing.py:</h4>
+<pre><code class="language-python">import pandas as pd
+from sklearn.base import BaseEstimator, TransformerMixin
+
+
+def remove_special_chars(series: pd.Series) -> pd.Series:
+    """
+    Remove special characters from a pandas Series.
+
+    This function removes special characters from a given pandas Series using 
+    a predefined regular expression pattern. The targeted special characters 
+    include symbols such as `*`, `/`, `!`, `_`, `-`, `.`, `,`, `;`, `?`, `$`, 
+    `%`, `&`, `^`, and others.
+
+    Parameters
+    ----------
+    series : pd.Series
+        A pandas Series containing string data from which special characters 
+        will be removed.
+
+    Returns
+    -------
+    pd.Series
+        A pandas Series with all special characters removed.
+    """
+    pattern = "[*/!_\\-.,;?$%&$^\xc2\xb0]"
+    cleaned_series = series.replace(pattern, "", regex=True)
+    return cleaned_series
+
+
+class PostalCodeBinTransformer(BaseEstimator, TransformerMixin):
+    """
+    A custom transformer that bins postal codes into predefined ranges.
+
+    This transformer takes a DataFrame containing a postal code column and 
+    assigns each postal code to a predefined range (bin). The ranges are 
+    intervals of 10,000, and each bin is labeled accordingly.
+
+    Attributes
+    ----------
+    bins : list of int
+        A list defining the upper limits of each bin. These bins represent 
+        ranges such as 0-10000, 10000-20000, etc.
+    labels : list of str
+        A list of labels corresponding to the ranges defined by `bins`. Each 
+        label represents a range in string format, e.g., "0-10000".
+
+    Methods
+    -------
+    fit(X, y=None)
+        Fit the transformer (no operation needed).
+    transform(X)
+        Transform the input DataFrame by binning postal codes.
+    """
+
+    def __init__(self):
+        """
+        Initialize the PostalCodeBinTransformer with predefined bins and labels.
+
+        The transformer divides postal codes into intervals of 10,000 and assigns 
+        a label to each interval. For example, postal codes in the range 0-10000 
+        are labeled as "0-10000".
+        """
+        self.bins = [
+            0,
+            10000,
+            20000,
+            30000,
+            40000,
+            50000,
+            60000,
+            70000,
+            80000,
+            90000,
+            100000,
+        ]
+        self.labels = [
+            "0-10000",
+            "10000-20000",
+            "20000-30000",
+            "30000-40000",
+            "40000-50000",
+            "50000-60000",
+            "60000-70000",
+            "70000-80000",
+            "80000-90000",
+            "90000-100000",
+        ]
+
+    def fit(self, X: pd.DataFrame, y=None):
+        """
+        Fit the transformer to the data (no operation needed).
+
+        This method is provided for compatibility with the scikit-learn 
+        transformer interface. No actual fitting is required for this transformer.
+
+        Parameters
+        ----------
+        X : pd.DataFrame
+            The input DataFrame.
+        y : None
+            Ignored. Exists for compatibility with scikit-learn.
+
+        Returns
+        -------
+        PostalCodeBinTransformer
+            The transformer instance itself.
+        """
+        return self
+
+    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
+        """
+        Transform the input DataFrame by binning postal codes.
+
+        The postal codes in the 'postal_code' column of the input DataFrame are 
+        assigned to predefined bins based on their values. A new column 
+        'postal_code_bin' is added to the DataFrame, containing the corresponding 
+        bin labels.
+
+        Parameters
+        ----------
+        X : pd.DataFrame
+            The input DataFrame containing a 'postal_code' column to be binned.
+
+        Returns
+        -------
+        pd.DataFrame
+            The transformed DataFrame with an additional 'postal_code_bin' column 
+            representing the binned postal code ranges.
+        """
+        postal_codes = X["postal_code"].astype(int)
+        X["postal_code_bin"] = pd.cut(
+            postal_codes, bins=self.bins, labels=self.labels
+        )
+        return X.drop(columns=["postal_code"])
+
+    def get_feature_names_out(self, input_features=None):
+        """
+        Get the names of the output features.
+
+        This method is part of the scikit-learn interface and returns the names 
+        of the features generated by the transformer.
+
+        Parameters
+        ----------
+        input_features : None
+            Ignored. Exists for compatibility with scikit-learn.
+
+        Returns
+        -------
+        list of str
+            A list containing the name of the output feature, 
+            i.e., ['postal_code_bin'].
+        """
+        return ["postal_code_bin"]
+</code></pre>
+
+<ul>
+    <li>
+    <incode>remove_special_chars(series)</incode>: 
+    This function uses a regular expression to remove a predefined set of special characters from each string in the input pandas Series.
+    </li>
+    <li>
+    <incode>PostalCodeBinTransformer</incode>: This is a custom transformer that inherits from <incode>BaseEstimator</incode> and <incode>TransformerMixin</incode>
+    </li>
+    <ul>
+        <li>
+            <incode>__init__(self)</incode>: Initializes the transformer with predefined bins (upper limits of postal code ranges) and labels for these bins.
+        </li>
+        <li>
+            <incode>fit(self, X, y=None)</incode>: This method is required by the Scikit-Learn API but doesn't perform any operation in this transformer. It simply returns the transformer object itself.
+        </li>
+        <li>
+            <incode>transform(self, X)</incode>: This method takes a DataFrame <incode>X</incode> as input, extracts the <incode>postal_code</incode> column, converts it to integer type, and then uses <incode>pd.cut</incode> to bin the postal codes into the predefined ranges. It adds a new column <incode>postal_code_bin</incode> to the DataFrame containing the bin labels and then drops the original <incode>postal_code</incode> column.
+        </li>
+        <li>
+            <incode>get_feature_names_out(self, input_features=None)</incode>: This method is used to define the names of the output features generated by this transformer. In this case, it outputs a single column named <incode>postal_code_bin</incode>.
+        </li>
+    </ul>
+</ul>
+
+<h4>6. Creating the First ColumnTransformer for Initial Preprocessing:</h4>
+<pre><code class="language-python"># ColumnTransformer for all preprocessing steps
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("numerical", numerical_pipeline, COLS_TO_ENCODE),
+        ("job_title", special_char_remover, ["job_title"]),
+        ("postal_code", PostalCodeBinTransformer(), ["postal_code"]),
+        ("city", "passthrough", ["city"]),
+    ],
+    remainder="drop",  # Remove other columns (e.g., first_name)
+    verbose_feature_names_out=False,
+)
+</code></pre>
+<p>
+Here, we instantiate the <incode>ColumnTransformer</incode> named <incode>preprocessor</incode>. 
+The <incode>transformers</incode> argument takes a list of tuples, where each tuple defines a transformation to be applied to a specific set of columns:
+</p>
+<ul>
+    <li>
+        <incode>("numerical", numerical_pipeline, COLS_TO_ENCODE)</incode>: Applies the <incode>numerical_pipeline</incode> (imputation and scaling) to the columns listed in <incode>COLS_TO_ENCODE</incode>. 
+        The string <incode>"numerical"</incode> is the name given to this transformer.
+    </li>
+    <li>
+        <incode>("job_title", special_char_remover, ["job_title"])</incode>: Applies the <incode>special_char_remover</incode> (our <incode>FunctionTransformer</incode>) to the <incode>job_title</incode> column.
+    </li>
+    <li>
+        <incode>("postal_code", PostalCodeBinTransformer(), ["postal_code"])</incode>: Applies our custom <incode>PostalCodeBinTransformer</incode> to the <incode>postal_code</incode> column.
+    </li>
+    <li>
+        <incode>("city", "passthrough", ["city"])</incode>: Applies the <incode>"passthrough"</incode> strategy to the <incode>city column</incode>, meaning this column will be kept without any transformation.
+    </li>
+    <li>
+        <incode>remainder="drop"</incode>: This specifies what to do with any columns in the input DataFrame that are not explicitly mentioned in the <incode>transformers</incode> list. 
+        In this case, we are dropping them (e.g., a potential <incode>first_name column</incode>).
+    </li>
+    <li>
+        <incode>verbose_feature_names_out=False</incode>: This option controls whether the output feature names should be verbose (including the transformer name). We set it to <incode>False</incode> for cleaner output.
+    </li>
+</ul>
+<h4>7. Creating the Second ColumnTransformer for One-Hot Encoding:</h4>
+<pre><code class="language-python"># One-Hot Encoding for categorical features
+ohe_transformer = ColumnTransformer(
+    transformers=[
+        (
+            "ohe",
+            OneHotEncoder(handle_unknown="ignore", sparse_output=False),
+            ["job_title", "city", "postal_code_bin"],
+        )
+    ],
+    remainder="passthrough",  # Keep numerical data
+    verbose_feature_names_out=False,
+).set_output(transform="pandas")
+</code></pre>
+<p>We create another <incode>ColumnTransformer</incode> named <incode>ohe_transformer</incode> to perform One-Hot Encoding on the categorical features.</p>
+
+<ul>
+    <li>
+        <incode>("ohe", OneHotEncoder(handle_unknown="ignore", sparse_output=False), ["job_title", "city", "postal_code_bin"])</incode>: Applies the <incode>OneHotEncoder</incode> to the <incode>job_title</incode>, <incode>city</incode>, and <incode>postal_code_bin</incode> columns.
+        <li>
+            <incode>handle_unknown="ignore"</incode> This tells the encoder to ignore unknown categories encountered during the <incode>transform</incode> phase.
+        </li>
+        <li>
+            <incode>sparse_output=False</incode> This ensures that the output of the One-Hot Encoder is a dense NumPy array rather than a sparse matrix.
+        </li>
+
+    </li>
+    <li>
+        <incode>remainder="passthrough"</incode> This time, we set remainder to <incode>"passthrough"</incode>, 
+        meaning that any columns not specified in the <incode>transformers</incode> list (which will be our processed numerical columns from the first <incode>ColumnTransformer</incode>) will be passed through without any transformation.
+    </li>
+    <li>
+       <incode>.set_output(transform="pandas")</incode>: This ensures the output is a pandas DataFrame.
+    </li>
+</ul>
+<h4>8. Fitting and Transforming the Data:</h4>
+
+<pre><code class="language-python">preprocessed_data = preprocessor.fit_transform(raw_data)
+preprocessed_df = pd.DataFrame(
+    preprocessed_data, columns=preprocessor.get_feature_names_out()
+)
+
+cleaned_data = ohe_transformer.fit_transform(preprocessed_df)
+</code></pre>
+<p>
+First, we fit the <incode>preprocessor</incode> to our <incode>raw_data</incode> and then transform it to get the preprocessed data. 
+The <incode>get_feature_names_out()</incode> method of the <incode>preprocessor</incode> is used to get the names of the output columns, which we then use to create a pandas DataFrame <incode>preprocessed_df</incode>.
+</p>
+<p>
+Next, we fit the <incode>ohe_transformer</incode> to the <incode>preprocessed_df</incode> and transform it to get our final <incode>cleaned_data</incode>.
+</p>
+<h4>9. Displaying Results:</h4>
+<pre><code class="language-python"># Display results
+pd.set_option("display.max_columns", 8)
+pd.set_option("display.expand_frame_repr", False)
+print(cleaned_data.head())
+</code></pre>
+<p>
+Finally, we set some pandas display options to make the output more readable and print the head of the <incode>cleaned_data</incode> DataFrame.
+</p>
+
+<img class="img-fluid"
+src="/assets/img/posts/2025/preprocessing/preprocessing-with-scikit-learn-pipelines-part3-cleaned_data.png">
+<span class="annotation">The final result stored in the `cleaned_data` dataframe</span>
+<p></p>
+<h3>Elegance and Robustness</h3>
+<p>
+As you can see, the <incode>ColumnTransformer</incode> allows us to clearly define and bundle the preprocessing steps for different column types within a single structure. 
+This is not only more organized than manually selecting and transforming columns, 
+as we might have hinted at in <a href="/posts/2024/preprocessing/preprocessing-pipelines-part2.html">part 2</a>, 
+but also more robust. We ensure that each transformation is applied only to the intended columns, minimizing the risk of errors due to incompatible data types.
+</p>
+<p>
+The use of Pipelines within the <incode>ColumnTransformer</incode> for the numerical columns further demonstrates 
+how we can create complex preprocessing chains for individual column groups, highlighting the flexibility and power of this tool.
+</p>
+<h3>Conclusion</h3>
+<p>
+The <incode>ColumnTransformer</incode> is an indispensable tool in the world of Scikit-Learn Pipelines. 
+It offers an elegant and robust way to apply different preprocessing steps to different columns in your dataset. 
+By centrally organizing the preprocessing logic, it improves the readability, maintainability, and reliability of your machine learning workflow.
+</p>
+                </div>
+            </div>
+        </div>
+    </article>
+    <!-- Footer-->
+    <footer class="border-top">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <ul class="list-inline text-center">
+                        <li class="list-inline-item">
+                            <a class="logo" href="https://www.linkedin.com/in/fabian-hruby-36b932100/">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fas fa-circle fa-stack-2x"></i>
+                                    <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a class="logo" href="https://github.com/fabianhruby">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fas fa-circle fa-stack-2x"></i>
+                                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="small text-center text-muted fst-italic">Copyright &copy; Byte-Sized Insights 2025
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="/js/scripts.js"></script>
+    <script src="/js/prism.js"></script>
+</body>
+
+</html>

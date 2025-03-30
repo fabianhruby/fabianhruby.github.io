@@ -225,7 +225,7 @@ import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 
 
-def remove_special_chars(df: pd.DataFrame, column_name: str) -> pd.Series:
+def remove_special_chars(df: pd.DataFrame, column_name: str) -> pd.DataFrame:
     """
     Removes special characters from a column.
 
@@ -238,8 +238,8 @@ def remove_special_chars(df: pd.DataFrame, column_name: str) -> pd.Series:
 
     Returns
     -------
-    pd.Series
-        The column with its values cleaned from special characters.
+    pd.DataFrame
+        The DataFrame where the specified column values are cleaned from special characters.
     """
     # Define pattern for special characters
     pattern = r"[\*\/!_\-.,;?$%&$\^°]"
